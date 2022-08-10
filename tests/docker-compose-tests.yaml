@@ -1,0 +1,41 @@
+version: '3.1'
+services:
+  webservice1:
+    build: ./
+    environment:
+      - NAME=webservice1
+      - HAS_PROBLEMS=False
+    ports:
+      - "8081:5000"
+
+  webservice2:
+    build: ./
+    environment:
+      - NAME=webservice2
+      - HAS_PROBLEMS=False
+    ports:
+      - "8082:5000"
+
+  webservice3:
+    build: ./
+    environment:
+      - NAME=webservice3
+      - HAS_PROBLEMS=False
+    ports:
+      - "8083:5000"
+
+  webservice4:
+    build: ./
+    environment:
+      - NAME=webservice4
+      - HAS_PROBLEMS=False
+    ports:
+      - "8084:5000"
+
+  failure-webservice:
+    build: ./
+    environment:
+      - NAME=webservice5
+      - HAS_PROBLEMS=True
+    ports:
+      - "8085:5000"
