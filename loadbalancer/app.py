@@ -4,12 +4,12 @@ import requests
 from config import ConfigWrapper
 from webservices_container import WebServicesContainer
 import available_services_collector
-from algorithm import RoundRobin
+import algorithm
 
 
 config = ConfigWrapper('./configs/loadbalancer.yaml')
 webservices = WebServicesContainer(config.get('webservices'))
-alg = RoundRobin(webservices)
+alg = algorithm.LeastConnections(webservices)
 
 core = Flask(__name__)
 
