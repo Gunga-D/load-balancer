@@ -4,11 +4,9 @@ A load balancer is a proxy server that distributes traffic across a number of se
 
 ### Details
 
-The project uses round robin algorithm. It has a number of significant limitations. 
+The project supports 2 algorithms: round robin and least connections. 
 
-List the main ones:
-- Services don't have the same resources at the hardware level.
-- Algorithm doesn't know about dropped out services. 
+Current realization uses least connections.
 
 ### Testing
 
@@ -23,8 +21,8 @@ make test
 To launch service:
 
 ```bash
-docker build -t load-balancer .
-docker run load-balancer
+docker build -f Dockerfile -t load-balancer .
+docker run -p 9092:5000 --network="host" load-balancer
 ```
 
 OR
