@@ -4,10 +4,11 @@ import threading
 from apscheduler.schedulers.background import BackgroundScheduler
 from flask import Flask
 from multiprocessing import Process
+from multiprocessing import Value
 
 
 name = os.environ["NAME"]
-requests_in_process_number = 0
+requests_in_process_number = Value('i', 0)
 
 app = Flask(__name__)
 server = Process(target = lambda: app.run(host='0.0.0.0', threaded = True))
@@ -19,18 +20,19 @@ def main():
 
     threading.Thread(target=process).start()
 
-    return f'service_name: {name}; requests_in_process_number: {requests_in_process_number}'
+    return f'service_name: {name}; requests_in_process_number: {requests_in_process_number.value}'
 
 def process():
     global requests_in_process_number
-    requests_in_process_number += 1
+    requests_in_process_number.value += 1
     time.sleep(1)
-    requests_in_process_number -= 1
+    requests_in_process_number.value -= 1
 
 def log_current_number_requests():
     if not server.is_alive():
         return
-    app.logger.warning(f'requests_in_process: {str(requests_in_process_number)}')
+    global requests_in_process_number
+    app.logger.warning(f'requests_in_process: {str(requests_in_process_number.value)}')
 
 def start_server():
     global server
@@ -41,7 +43,7 @@ def start_server():
 
     app.logger.warning('Server is starting...')
     
-    requests_in_process_number = 0
+    requests_in_process_number.value = 0
 
     server = Process(target = lambda: app.run(host='0.0.0.0'))
     server.start()
