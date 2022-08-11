@@ -1,7 +1,7 @@
 version: '3.1'
 services:
   webservice1:
-    build: ./
+    build: ./tests
     environment:
       - NAME=webservice1
       - HAS_PROBLEMS=False
@@ -9,7 +9,7 @@ services:
       - "8081:5000"
 
   webservice2:
-    build: ./
+    build: ./tests
     environment:
       - NAME=webservice2
       - HAS_PROBLEMS=False
@@ -17,7 +17,7 @@ services:
       - "8082:5000"
 
   webservice3:
-    build: ./
+    build: ./tests
     environment:
       - NAME=webservice3
       - HAS_PROBLEMS=False
@@ -25,7 +25,7 @@ services:
       - "8083:5000"
 
   webservice4:
-    build: ./
+    build: ./tests
     environment:
       - NAME=webservice4
       - HAS_PROBLEMS=False
@@ -33,9 +33,22 @@ services:
       - "8084:5000"
 
   failure-webservice:
-    build: ./
+    build: ./tests
     environment:
       - NAME=webservice5
       - HAS_PROBLEMS=True
     ports:
       - "8085:5000"
+  
+  testing-loadbalancer:
+    build:
+      context: ./
+      dockerfile: ./Dockerfile.tests
+    command: pytest -s
+    depends_on:
+      - webservice1
+      - webservice2
+      - webservice3
+      - webservice4
+      - failure-webservice
+    network_mode: "host"
