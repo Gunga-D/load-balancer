@@ -2,10 +2,8 @@ FROM python:3.8-slim-buster
 
 WORKDIR /app
 
-COPY Makefile ./
-
 COPY requirements.txt ./
-RUN make dependencies
+RUN pip install -r requirements.txt
 
 COPY . .
 
